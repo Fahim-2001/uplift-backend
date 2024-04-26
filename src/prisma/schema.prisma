@@ -8,8 +8,31 @@ datasource db {
   relationMode = "prisma"
 }
 
+model roles {
+  role_id  Int       @id @unique @default(autoincrement())
+  role     String?   @db.VarChar(100)
+  users    users?
+  students students?
+}
+
 model users {
-  id       Int     @id
-  name     String? @db.VarChar(255)
-  hometown String? @db.VarChar(255)
+  id           Int     @id @unique @default(autoincrement())
+  firstName    String? @db.VarChar(255)
+  lastName     String? @db.VarChar(255)
+  email        String? @db.VarChar(255)
+  password     String? @db.VarChar(255)
+  registeredAt String? @db.VarChar(255)
+  roleId       Int     @unique
+  role         roles   @relation(fields: [roleId], references: [role_id])
+}
+
+model students {
+  stId      Int     @id @unique @default(autoincrement())
+  firstName String? @db.VarChar(255)
+  lastName  String? @db.VarChar(255)
+  email     String? @db.VarChar(255)
+  phone     String? @db.VarChar(255)
+  institute String? @db.VarChar(255)
+  roleId    Int     @unique
+  role      roles   @relation(fields: [roleId], references: [role_id])
 }
