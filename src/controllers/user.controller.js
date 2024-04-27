@@ -1,4 +1,5 @@
-const {PrismaClient} = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
+const { addUserToDb } = require("../services/user.services");
 
 const prisma = new PrismaClient();
 const getAllUser = async (req, res) => {
@@ -12,23 +13,17 @@ const getAllUser = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-        try {
-            const { id, name, hometown } = req.body;
-            const data = await prisma.users.create({
-                data: {
-                    id: id,
-                    name: name,
-                    hometown: hometown,
-                },
-            });
-            res.status(201).json(data);
-        } catch (error) {
-            console.log(error.message);
-            res.json({ message: error.message });
-        }
+    try {
+        const data = req.body;
+        const user =await addUserToDb(data);
+        res.status(201).json({message:"Registration Successful"});
+    } catch (error) {
+        console.log(error.message);
+        res.json({ message: error.message });
+    }
 };
 
 module.exports = {
     getAllUser,
-    createUser
-}
+    createUser,
+};
