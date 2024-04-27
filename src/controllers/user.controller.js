@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { addUserToDB } = require("../services/user.services");
+const { setUser } = require("../services/auth.services");
 
 const prisma = new PrismaClient();
 const getAllUser = async (req, res) => {
@@ -16,10 +17,17 @@ const createUser = async (req, res) => {
     try {
         const data = req.body;
         const user = await addUserToDB(data);
-        res.status(201).json({ message: "Registration Successful" });
+        const token = setUser(user);
+        const essentials = {
+            firstName:user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            roleId: user.roleId,
+        }
+        res.status(201).json({ message: "Registration Successful", essentials, token});
     } catch (error) {
         console.log(error.message);
-        res.json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 

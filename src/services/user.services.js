@@ -9,7 +9,7 @@ const addUserToDB = async (data) => {
 
     const hashedPass = await bcrypt.hash(data.password, 10);
     const regDateTime = getDateTime();
-
+    
     // Adding Student
     if (data.institute) {
         const student = await addStudentToDB(data);
@@ -23,7 +23,6 @@ const addUserToDB = async (data) => {
                 roleId: 5 || null,
             },
         });
-        
         return user;
     }
 };
