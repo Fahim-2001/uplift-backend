@@ -1,17 +1,19 @@
 const { PrismaClient } = require("@prisma/client");
 const { getDateTime } = require("../utils/getDateTime");
 const bcrypt = require("bcryptjs");
+const { addStudentToDB } = require("./student.services");
 const prisma = new PrismaClient();
 
-const addUserToDb = async (data) => {
-    if (!data) return new Error("Data is missing");
+const addUserToDB = async (data) => {
+    if (!data) throw new Error("Data is missing");
 
     const hashedPass = await bcrypt.hash(data.password, 10);
     const regDateTime = getDateTime();
 
     // Adding Student
     if (data.institute) {
-        return (student = await prisma.users.create({
+        const student = await addStudentToDB(data);
+        const user = await prisma.users.create({
             data: {
                 firstName: data.firstName,
                 lastName: data.lastName,
@@ -20,10 +22,12 @@ const addUserToDb = async (data) => {
                 registeredAt: regDateTime,
                 roleId: 5 || null,
             },
-        }));
+        });
+        
+        return user;
     }
 };
 
 module.exports = {
-    addUserToDb,
+    addUserToDB,
 };
