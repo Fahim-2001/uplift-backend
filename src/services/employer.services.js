@@ -2,27 +2,28 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const addStudentToDB = async (data) => {
+const addEmployerToDB = async (data) => {
     try {
         if (!data) throw new Error("Data is missing");
 
-        const student = await prisma.students.create({
+        const employer = await prisma.employers.create({
             data: {
                 firstName: data.firstName,
                 lastName: data.lastName,
                 email: data.email,
                 phone: data.phoneNumber,
-                institute: data.institute,
-                roleId: 5,
+                organisation: data.orgName,
+                address: data.address,
+                roleId: 4,
             },
         });
 
-        return student;
+        return employer;
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
 };
 
 module.exports = {
-    addStudentToDB,
+    addEmployerToDB,
 };

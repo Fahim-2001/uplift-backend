@@ -9,10 +9,11 @@ datasource db {
 }
 
 model roles {
-  role_id  Int       @id @unique @default(autoincrement())
-  role     String    @db.VarChar(100)
-  users    users?
-  students students?
+  role_id   Int        @id @unique @default(autoincrement())
+  role      String     @db.VarChar(100)
+  users     users?
+  students  students?
+  employers employers?
 }
 
 model users {
@@ -22,8 +23,8 @@ model users {
   email        String @db.VarChar(255)
   password     String @db.VarChar(255)
   registeredAt String @db.VarChar(255)
-  roleId       Int?  @unique
-  role         roles?  @relation(fields: [roleId], references: [role_id])
+  roleId       Int?   @unique
+  role         roles? @relation(fields: [roleId], references: [role_id])
 }
 
 model students {
@@ -34,5 +35,17 @@ model students {
   phone     String @db.VarChar(255)
   institute String @db.VarChar(255)
   roleId    Int?   @unique
-  role      roles?  @relation(fields: [roleId], references: [role_id])
+  role      roles? @relation(fields: [roleId], references: [role_id])
+}
+
+model employers {
+  empId          Int    @id @unique @default(autoincrement())
+  firstName    String @db.VarChar(255)
+  lastName     String @db.VarChar(255)
+  email        String @db.VarChar(255)
+  phone        String @db.VarChar(255)
+  organisation String @db.VarChar(255)
+  address      String @db.VarChar(255)
+  roleId       Int?   @unique
+  role         roles? @relation(fields: [roleId], references: [role_id])
 }

@@ -1,9 +1,13 @@
+const { PrismaClient } = require("@prisma/client");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const SECRET = process.env.JWT_SECRET;
 
+const prisma = new PrismaClient();
+
 const setUser = (user) => {
-    return jwt.sign(
+    const token = jwt.sign(
         {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -15,6 +19,16 @@ const setUser = (user) => {
             expiresIn: "24h",
         },
     );
+
+    return {
+        id: user.id,
+        firstName:user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        registeredAt: user.registeredAt,
+        roleId: user.roleId,
+        token
+    }
 };
 
 const verifyJWT = (token) => {
@@ -26,7 +40,28 @@ const verifyJWT = (token) => {
     }
 };
 
+const verifyUser = async (user) =>{
+    try {
+        if(!user) throw Error("No user found");
+        const [registeredUser] = await prisma.users.findMany({
+            where:{
+                email: user.email,
+            }
+        });
+        
+        if(!registeredUser) throw Error("User don't exists");
+
+        const checkPassword = await bcrypt.compare(user.password,registeredUser.password);
+        if(!checkPassword) throw Error("Password didn't match");
+
+        return registeredUser;
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
     setUser,
     verifyJWT,
+    verifyUser
 };

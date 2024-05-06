@@ -17,15 +17,8 @@ const createUser = async (req, res) => {
     try {
         const data = req.body;
         const user = await addUserToDB(data);
-        const token = setUser(user);
-        const essentials = {
-            firstName:user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            roleId: user.roleId,
-            token
-        }
-        res.status(201).json({ message: "Registration Successful", essentials});
+        const tokenizedUser = setUser(user);
+        res.status(201).json({ message: "Registration Successful", tokenizedUser});
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: error.message });
