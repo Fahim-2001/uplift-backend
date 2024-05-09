@@ -9,11 +9,12 @@ datasource db {
 }
 
 model roles {
-  role_id   Int        @id @unique @default(autoincrement())
-  role      String     @db.VarChar(100)
-  users     users?
-  students  students?
-  employers employers?
+  roleId      Int          @id @unique @default(autoincrement())
+  role        String       @db.VarChar(100)
+  users       users?
+  students    students?
+  employers   employers?
+  instructors instructors?
 }
 
 model users {
@@ -24,7 +25,7 @@ model users {
   password     String @db.VarChar(255)
   registeredAt String @db.VarChar(255)
   roleId       Int?   @unique
-  role         roles? @relation(fields: [roleId], references: [role_id])
+  role         roles? @relation(fields: [roleId], references: [roleId])
 }
 
 model students {
@@ -35,11 +36,11 @@ model students {
   phone     String @db.VarChar(255)
   institute String @db.VarChar(255)
   roleId    Int?   @unique
-  role      roles? @relation(fields: [roleId], references: [role_id])
+  role      roles? @relation(fields: [roleId], references: [roleId])
 }
 
 model employers {
-  empId          Int    @id @unique @default(autoincrement())
+  empId        Int    @id @unique @default(autoincrement())
   firstName    String @db.VarChar(255)
   lastName     String @db.VarChar(255)
   email        String @db.VarChar(255)
@@ -47,5 +48,44 @@ model employers {
   organisation String @db.VarChar(255)
   address      String @db.VarChar(255)
   roleId       Int?   @unique
-  role         roles? @relation(fields: [roleId], references: [role_id])
+  role         roles? @relation(fields: [roleId], references: [roleId])
+}
+
+model instructors {
+  instId                Int                     @id @unique @default(autoincrement())
+  firstName             String                  @db.VarChar(255)
+  lastName              String                  @db.VarChar(255)
+  email                 String                  @db.VarChar(255)
+  phone                 String                  @db.VarChar(255)
+  address               String                  @db.VarChar(255)
+  workingCompany        String                  @db.VarChar(255)
+  salary                String                  @db.VarChar(255)
+  roleId                Int?                    @unique
+  role                  roles?                  @relation(fields: [roleId], references: [roleId])
+  instructorsOnPrograms instructorsOnPrograms[]
+}
+
+model programs {
+  prgId                 Int                     @id @unique @default(autoincrement())
+  courseTitle           String                  @db.VarChar(255)
+  price                 Int
+  offerPrice            Int
+  totalClasses          Int
+  duration              Int
+  perWeekLiveClasses    Int
+  totalEnrolled         Int
+  maxStudentLimit       Int
+  thingsToTeach         String                  @db.VarChar(1000)
+  roadmap               String                  @db.VarChar(10000)
+  instructorsOnPrograms instructorsOnPrograms[]
+}
+
+model instructorsOnPrograms {
+  instId     Int         @unique
+  instructor instructors @relation(fields: [instId], references: [instId])
+  prgId      Int         @unique
+  program    programs    @relation(fields: [prgId], references: [prgId])
+  assignedAt DateTime @default(now())
+  assignedBy String
+  @@id([instId, prgId])
 }
