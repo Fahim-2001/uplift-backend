@@ -11,10 +11,10 @@ datasource db {
 model roles {
   roleId      Int          @id @unique @default(autoincrement())
   role        String       @db.VarChar(100)
-  users       users?
-  students    students?
-  employers   employers?
-  instructors instructors?
+  users       users[]
+  students    students[]
+  employers   employers[]
+  instructors instructors[]
 }
 
 model users {
@@ -26,6 +26,7 @@ model users {
   registeredAt String @db.VarChar(255)
   roleId       Int?   @unique
   role         roles? @relation(fields: [roleId], references: [roleId])
+  @@index([roleId])
 }
 
 model students {
@@ -37,6 +38,7 @@ model students {
   institute String @db.VarChar(255)
   roleId    Int?   @unique
   role      roles? @relation(fields: [roleId], references: [roleId])
+  @@index([roleId])
 }
 
 model employers {
@@ -49,6 +51,7 @@ model employers {
   address      String @db.VarChar(255)
   roleId       Int?   @unique
   role         roles? @relation(fields: [roleId], references: [roleId])
+  @@index([roleId])
 }
 
 model instructors {
@@ -59,10 +62,12 @@ model instructors {
   phone                 String                  @db.VarChar(255)
   address               String                  @db.VarChar(255)
   workingCompany        String                  @db.VarChar(255)
-  salary                String                  @db.VarChar(255)
-  roleId                Int?                    @unique
+  position              String                  @db.VarChar(255)
+  salary                Int
+  roleId                Int
   role                  roles?                  @relation(fields: [roleId], references: [roleId])
   instructorsOnPrograms instructorsOnPrograms[]
+  @@index([roleId]) 
 }
 
 model programs {
@@ -85,7 +90,8 @@ model instructorsOnPrograms {
   instructor instructors @relation(fields: [instId], references: [instId])
   prgId      Int         @unique
   program    programs    @relation(fields: [prgId], references: [prgId])
-  assignedAt DateTime @default(now())
+  assignedAt DateTime    @default(now())
   assignedBy String
+
   @@id([instId, prgId])
 }
