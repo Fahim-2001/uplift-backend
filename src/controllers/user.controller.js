@@ -9,7 +9,7 @@ const getAllUser = async (req, res) => {
         res.status(200).json(data);
     } catch (error) {
         console.log(error.message);
-        res.json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -21,7 +21,7 @@ const createUser = async (req, res) => {
         res.status(201).json({ message: "Registration Successful", tokenizedUser});
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
