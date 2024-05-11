@@ -8,6 +8,7 @@ const createStudent = async (req, res) => {
         res.status(201).json({ message: "Registration Successful" });
     } catch (error) {
         console.log(err.message);
+        return res.status(500).json({message:error.message})
     }
 };
 
