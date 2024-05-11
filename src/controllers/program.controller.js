@@ -1,11 +1,12 @@
 const {
-    getProgramsFromDB,
+    programsFromDB,
     allProgramsWithInstructorsFromDB,
+    programByIdFromDB,
 } = require("../services/program.services");
 
 const getAllPrograms = async (req, res) => {
     try {
-        const programs = await getProgramsFromDB();
+        const programs = await programsFromDB();
         res.status(200).json(programs);
     } catch (error) {
         console.error(error.message);
@@ -13,10 +14,11 @@ const getAllPrograms = async (req, res) => {
     }
 };
 
-const getProgramsById = async (req,res)=>{
+const getProgramById = async (req,res)=>{
     try {
-        const prgId = req.params;
-        res.status(200).json(req.params)
+        const prgId =Number(req.params.prgId);
+        const program = await programByIdFromDB(prgId);
+        res.status(200).json(program)
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({message:error.message})
@@ -36,6 +38,6 @@ const getAllProgramsWithInstructors = async (req, res) => {
 
 module.exports = {
     getAllPrograms,
-    getProgramsById,
+    getProgramById,
     getAllProgramsWithInstructors,
 };

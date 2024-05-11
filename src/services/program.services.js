@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const { getOrSetRedisCache } = require("../utils/getOrSetRedisCache");
 const prisma = new PrismaClient();
 
-const getProgramsFromDB = async () => {
+const programsFromDB = async () => {
     try {
         const programs = await getOrSetRedisCache("programs", async () => {
             const data = await prisma.programs.findMany();
@@ -35,7 +35,6 @@ const allProgramsWithInstructorsFromDB = async () => {
                         prgId: "asc",
                     },
                 });
-
                 return data;
             },
         );
@@ -44,7 +43,27 @@ const allProgramsWithInstructorsFromDB = async () => {
         throw new Error(error.message);
     }
 };
+
+const programByIdFromDB = async (prgId) => {
+    try {
+        const program = await getOrSetRedisCache(
+            `program:${prgId}`,
+            async () => {
+                const data = await prisma.programs.findUnique({
+                    where: {
+                        prgId: prgId,
+                    },
+                });
+                return data;
+            },
+        );
+        return program;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
 module.exports = {
-    getProgramsFromDB,
+    programsFromDB,
     allProgramsWithInstructorsFromDB,
+    programByIdFromDB,
 };
