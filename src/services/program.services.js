@@ -13,6 +13,26 @@ const programsFromDB = async () => {
         throw new Error(error.message);
     }
 };
+
+const programByIdFromDB = async (prgId) => {
+    try {
+        const program = await getOrSetRedisCache(
+            `program:${prgId}`,
+            async () => {
+                const data = await prisma.programs.findUnique({
+                    where: {
+                        prgId: prgId,
+                    },
+                });
+                return data;
+            },
+        );
+        return program;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 const allProgramsWithInstructorsFromDB = async () => {
     try {
         const programsWithInstructors = await getOrSetRedisCache(
@@ -44,26 +64,40 @@ const allProgramsWithInstructorsFromDB = async () => {
     }
 };
 
-const programByIdFromDB = async (prgId) => {
+const programWithInstructorsByIdFromDB = async (prgId) => {
     try {
-        const program = await getOrSetRedisCache(
-            `program:${prgId}`,
+        const programsWithInstructors = await getOrSetRedisCache(
+            `programsWithInstructor:${prgId}`,
             async () => {
-                const data = await prisma.programs.findUnique({
+                const data = await prisma.instructorsOnPrograms.findUnique({
                     where: {
                         prgId: prgId,
+                    },
+                    select: {
+                        instructor: {
+                            select: {
+                                instId: true,
+                                firstName: true,
+                                lastName: true,
+                                workingCompany: true,
+                                position: true,
+                            },
+                        },
+                        program: true,
                     },
                 });
                 return data;
             },
         );
-        return program;
+        return programsWithInstructors;
     } catch (error) {
         throw new Error(error.message);
     }
 };
+
 module.exports = {
     programsFromDB,
-    allProgramsWithInstructorsFromDB,
     programByIdFromDB,
+    allProgramsWithInstructorsFromDB,
+    programWithInstructorsByIdFromDB,
 };
