@@ -24,7 +24,7 @@ model users {
   email        String @db.VarChar(255)
   password     String @db.VarChar(255)
   registeredAt String @db.VarChar(255)
-  roleId       Int?   @unique
+  roleId       Int?  
   role         roles? @relation(fields: [roleId], references: [roleId])
   @@index([roleId])
 }
@@ -36,7 +36,7 @@ model students {
   email     String @db.VarChar(255)
   phone     String @db.VarChar(255)
   institute String @db.VarChar(255)
-  roleId    Int?   @unique
+  roleId    Int?   
   role      roles? @relation(fields: [roleId], references: [roleId])
   @@index([roleId])
 }
@@ -49,7 +49,7 @@ model employers {
   phone        String @db.VarChar(255)
   organisation String @db.VarChar(255)
   address      String @db.VarChar(255)
-  roleId       Int?   @unique
+  roleId       Int?   
   role         roles? @relation(fields: [roleId], references: [roleId])
   @@index([roleId])
 }
