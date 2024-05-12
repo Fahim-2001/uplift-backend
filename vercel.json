@@ -1,3 +1,19 @@
 {
-  "rewrites": [{ "source": "/", "destination": "/src" }]
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/src/index.js",
+      "methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+    }
+    }
+  ]
 }
