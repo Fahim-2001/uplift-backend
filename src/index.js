@@ -12,7 +12,12 @@ const ProgramRoute= require('./routes/v1/program.route');
 const InstructorRoute= require('./routes/v1/instructor.route');
 
 // app.use(express.json());
-app.use(cors());
+const corsConfig = {
+    origin: '',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+}
+app.use(cors(corsConfig));
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
