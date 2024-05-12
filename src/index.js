@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
+const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 8000;
 
 const UserRoute = require('./routes/v1/user.route');
@@ -10,9 +11,11 @@ const AuthRoute = require('./routes/v1/auth.route');
 const ProgramRoute= require('./routes/v1/program.route');
 const InstructorRoute= require('./routes/v1/instructor.route');
 
-app.use(express.json());
+// app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use('/api/v1/user',UserRoute);
