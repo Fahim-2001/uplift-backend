@@ -22,13 +22,13 @@ const setUser = (user) => {
 
     return {
         id: user.id,
-        firstName:user.firstName,
+        firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
         registeredAt: user.registeredAt,
         roleId: user.roleId,
-        token
-    }
+        token,
+    };
 };
 
 const verifyJWT = (token) => {
@@ -40,28 +40,35 @@ const verifyJWT = (token) => {
     }
 };
 
-const verifyUser = async (user) =>{
+const verifyUser = async (user) => {
     try {
-        if(!user) throw Error("No user found");
+        if (!user) throw Error("No user found");
         const [registeredUser] = await prisma.users.findMany({
-            where:{
+            where: {
                 email: user.email,
-            }
+            },
         });
-        
-        if(!registeredUser) throw Error("User don't exists");
 
-        const checkPassword = await bcrypt.compare(user.password,registeredUser.password);
-        if(!checkPassword) throw Error("Password didn't match");
+        if (!registeredUser) throw Error("No user exists with this credentials");
+
+        if(registeredUser.password === user.password){
+            return registeredUser;
+        }
+
+        const checkPassword = await bcrypt.compare(
+            user.password,
+            registeredUser.password,
+        );
+        if (!checkPassword) throw Error("Password didn't match");
 
         return registeredUser;
     } catch (error) {
-        console.log(error.message)
+        throw Error(error.message);
     }
-}
+};
 
 module.exports = {
     setUser,
     verifyJWT,
-    verifyUser
+    verifyUser,
 };

@@ -9,8 +9,8 @@ datasource db {
 }
 
 model roles {
-  roleId      Int          @id @unique @default(autoincrement())
-  role        String       @db.VarChar(100)
+  roleId      Int           @id @unique @default(autoincrement())
+  role        String        @db.VarChar(100)
   users       users[]
   students    students[]
   employers   employers[]
@@ -24,8 +24,9 @@ model users {
   email        String @db.VarChar(255)
   password     String @db.VarChar(255)
   registeredAt String @db.VarChar(255)
-  roleId       Int?  
+  roleId       Int?
   role         roles? @relation(fields: [roleId], references: [roleId])
+
   @@index([roleId])
 }
 
@@ -36,8 +37,9 @@ model students {
   email     String @db.VarChar(255)
   phone     String @db.VarChar(255)
   institute String @db.VarChar(255)
-  roleId    Int?   
+  roleId    Int?
   role      roles? @relation(fields: [roleId], references: [roleId])
+
   @@index([roleId])
 }
 
@@ -49,8 +51,9 @@ model employers {
   phone        String @db.VarChar(255)
   organisation String @db.VarChar(255)
   address      String @db.VarChar(255)
-  roleId       Int?   
+  roleId       Int?
   role         roles? @relation(fields: [roleId], references: [roleId])
+
   @@index([roleId])
 }
 
@@ -58,8 +61,8 @@ model instructors {
   instId                Int                     @id @unique @default(autoincrement())
   firstName             String                  @db.VarChar(255)
   lastName              String                  @db.VarChar(255)
-  email                 String                  @db.VarChar(255)
-  phone                 String                  @db.VarChar(255)
+  email                 String                  @unique @db.VarChar(255)
+  phone                 String                  @unique @db.VarChar(255)
   address               String                  @db.VarChar(255)
   workingCompany        String                  @db.VarChar(255)
   position              String                  @db.VarChar(255)
@@ -67,7 +70,8 @@ model instructors {
   roleId                Int
   role                  roles?                  @relation(fields: [roleId], references: [roleId])
   instructorsOnPrograms instructorsOnPrograms[]
-  @@index([roleId]) 
+
+  @@index([roleId])
 }
 
 model programs {
