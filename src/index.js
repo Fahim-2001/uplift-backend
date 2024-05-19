@@ -14,11 +14,11 @@ const PaymentRoute = require("./routes/v1/payment.route");
 // app.use(express.json());
 const corsOptions = {
     origin: "http://localhost:5174",
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
- };
- 
- app.use(cors()); 
+};
+
+app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

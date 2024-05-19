@@ -8,25 +8,24 @@ const prisma = new PrismaClient();
 const addUserToDB = async (data) => {
     if (!data) throw new Error("Data is missing");
 
-    const hashedPass = await bcrypt.hash(data.password, 10);
     const regDateTime = getDateTime();
     
-    // Adding Student
-    if (data.institute) {
-        const student = await addStudentToDB(data);
+    // Add Instructor
+    if (data?.workingCompany) {
         const user = await prisma.users.create({
             data: {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                password: hashedPass,
+                firstName: data?.firstName,
+                lastName: data?.lastName,
+                email: data?.email,
+                password: await bcrypt.hash("1234", 10),
                 registeredAt: regDateTime,
-                roleId: 5 || null,
+                roleId: 3 || null,
             },
         });
         return user;
     }
 
+    // const hashedPass = await bcrypt.hash(data.password, 10);
     // Adding Employer
     if (data.orgName) {
         const employee = await addEmployerToDB(data);
@@ -38,6 +37,22 @@ const addUserToDB = async (data) => {
                 password: hashedPass,
                 registeredAt: regDateTime,
                 roleId: 4 || null,
+            },
+        });
+        return user;
+    }
+
+    // Adding Student
+    if (data.institute) {
+        const student = await addStudentToDB(data);
+        const user = await prisma.users.create({
+            data: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                password: hashedPass,
+                registeredAt: regDateTime,
+                roleId: 5 || null,
             },
         });
         return user;

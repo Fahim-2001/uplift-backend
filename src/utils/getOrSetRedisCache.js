@@ -6,7 +6,7 @@ const getOrSetRedisCache = (key, cb) => {
             if (err) return reject(err);
             if (cacheData != null) return resolve(JSON.parse(cacheData));
             const freshData = await cb();
-            await redisClient.setex(key, 3600, JSON.stringify(freshData));
+            await redisClient.setex(key, 1800, JSON.stringify(freshData));
             resolve(freshData);
         });
     });
