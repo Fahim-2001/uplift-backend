@@ -21,7 +21,7 @@ model users {
   id           Int    @id @unique @default(autoincrement())
   firstName    String @db.VarChar(255)
   lastName     String @db.VarChar(255)
-  email        String @db.VarChar(255)
+  email        String @unique @db.VarChar(255)
   password     String @db.VarChar(255)
   registeredAt String @db.VarChar(255)
   roleId       Int?
@@ -82,10 +82,10 @@ model programs {
   totalClasses          Int
   duration              Int
   perWeekLiveClasses    Int
-  totalEnrolled         Int
+  totalEnrolled         Int?
   maxStudentLimit       Int
   thingsToTeach         String                  @db.VarChar(1000)
-  roadmap               String                  @db.VarChar(10000)
+  roadmap               String?                  @db.VarChar(10000)
   instructorsOnPrograms instructorsOnPrograms[]
 }
 
@@ -94,8 +94,8 @@ model instructorsOnPrograms {
   instructor instructors @relation(fields: [instId], references: [instId])
   prgId      Int         @unique
   program    programs    @relation(fields: [prgId], references: [prgId])
-  assignedAt DateTime    @default(now())
-  assignedBy String
+  assignedAt DateTime?    @default(now())
+  assignedBy String?
 
   @@id([instId, prgId])
 }

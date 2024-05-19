@@ -3,6 +3,8 @@ const {
     allProgramsWithInstructorsFromDB,
     programByIdFromDB,
     programWithInstructorsByIdFromDB,
+    addProgramToDB,
+    deleteProgramFromDB,
 } = require("../services/program.services");
 
 const getAllPrograms = async (req, res) => {
@@ -48,9 +50,32 @@ const getProgramWithInstructorsById = async (req, res) => {
     }
 };
 
+const createPrograms = async (req, res) => {
+    try {
+        const program = await addProgramToDB(req.body);
+        res.status(201).json({ message: "Created Successfully" });
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+const deleteProgram = async (req, res) => {
+    try {
+        console.log(Number(req.params.prgId));
+        await deleteProgramFromDB(Number(req.params.prgId));
+        res.status(200).json({ message: "Created Successfull" });
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getAllPrograms,
     getProgramById,
     getAllProgramsWithInstructors,
     getProgramWithInstructorsById,
+    createPrograms,
+    deleteProgram,
 };
